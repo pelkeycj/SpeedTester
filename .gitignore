@@ -1,3 +1,11 @@
 # Compiled code #
 ####################
 *.pyc
+
+# Database #
+###################
+*.db
+
+# TODO list #
+##################
+todo.txt
