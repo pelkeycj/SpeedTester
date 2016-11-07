@@ -23,15 +23,6 @@ class SpeedTest():
         with conn:
             cursor = conn.cursor()
 
-            cursor.execute("CREATE TABLE IF NOT EXISTS Tests(Timestamp INT, Ping REAL, Down REAL, Up REAL)")
-            cursor.execute("INSERT INTO Tests(Timestamp, Ping, Up, Down) VALUES(?,?,?,?)",
+            cursor.execute("CREATE TABLE IF NOT EXISTS Tests(Timestamp TEXT, Ping REAL, Down REAL, Up REAL)")
+            cursor.execute("INSERT INTO Tests(Timestamp, Ping, Down, Up) VALUES(?,?,?,?)",
                             (self.timestamp, self.ping, self.down, self.up))
-
-
-    ''' Clear all data from database '''
-    def clearData(self):
-        conn = lite.connect('test.db')
-        with conn:
-            cursor = conn.cursor()
-            cursor.execute('DROP TABLE IF EXISTS Tests')
-            
