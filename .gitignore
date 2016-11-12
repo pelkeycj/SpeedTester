@@ -9,3 +9,7 @@
 # text files #
 ##################
 *.txt
+
+# Object files #
+#################
+*.obj
