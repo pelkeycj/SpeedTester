@@ -12,10 +12,8 @@ def main():
     path = os.path.abspath(__file__)
     makeCron(path)
 
-    os.popen("echo 'running test . . . ' >> ~/Documents/scripts/SpeedTester/debugger.txt")
     test = SpeedTest()
     test.runTest()
-    os.popen("echo 'tested! logging ...' >> ~/Documents/scripts/SpeedTester/debugger.txt")
     test.logData(path)
 
 

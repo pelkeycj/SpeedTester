@@ -24,9 +24,8 @@ class SpeedTest():
     def logData(self, path):
         dir_path = path[:-7]
         conn = lite.connect(dir_path + 'test.db')
-        os.popen("echo 'connecting' >> ~/Documents/scripts/SpeedTester/debugger.txt")
+
         with conn:
-            os.popen("echo 'connected!!' >> ~/Documents/scripts/SpeedTester/debugger.txt")
             cursor = conn.cursor()
 
             cursor.execute("CREATE TABLE IF NOT EXISTS Tests(Timestamp TEXT, Ping REAL, Down REAL, Up REAL)")
