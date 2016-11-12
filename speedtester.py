@@ -14,7 +14,7 @@ def main():
     path = os.path.abspath(__file__)
     makeCron(path)
 
-    if checkIP():
+    if checkIP(path):
         test = SpeedTest()
         test.runTest()
         test.logData(path)
@@ -31,7 +31,7 @@ def makeCron(path):
 
 
     #make cron job if not exist
-    dir_path = path[:-7]
+    dir_path = path[:-14]
     job = cron.new(command= "python %s\n" % path)
     job.set_comment(speedtest_ID)
     job.setall('* 0 * * *')
@@ -39,26 +39,30 @@ def makeCron(path):
 
 ''' Gets the IP address for speed monitoring
     Sets the address if not exists'''
-def getIP():
+def getIP(path):
+    dir_path = path[:-14]
     # open and read stored address data
     try:
-        addr_file = open('address.obj', 'r')
+        addr_file = open(dir_path + 'address.obj', 'r')
         address = pickle.load(addr_file)
     # else create new address file
     except IOError:
         address = requests.request('GET', 'http://myip.dnsomatic.com').text
-        addr_file = open('address.obj', 'w')
+        addr_file = open(dir_path + 'address.obj', 'w')
         pickle.dump(address, addr_file)
 
     return address
 
 ''' Checks the users IP address to determine
     if the speed test should be run '''
-def checkIP():
+def checkIP(path):
         current_ip = requests.request('GET', 'http://myip.dnsomatic.com').text
-        test_ip = getIP()
+        test_ip = getIP(path)
 
+        print(current_ip)
+        print(test_ip)
         if current_ip == test_ip:
+            print("equal addrs")
             return True
         else:
             return False
@@ -66,7 +70,7 @@ def checkIP():
 
 ''' Clear all data from database '''
 def clearData(path):
-    dir_path = path[:-7]
+    dir_path = path[:-14]
     conn = lite.connect(dir_path + 'test.db')
 
     with conn:
@@ -75,7 +79,7 @@ def clearData(path):
 
 ''' Plot data '''
 def plotData(path):
-    dir_path = path[:-7]
+    dir_path = path[:-14]
     conn = lite.connect(dir_path + 'test.db')
     with conn:
         cursor = conn.cursor()
