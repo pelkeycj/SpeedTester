@@ -6,6 +6,6 @@
 ###################
 *.db
 
-# TODO list #
+# text files #
 ##################
-todo.txt
+*.txt
