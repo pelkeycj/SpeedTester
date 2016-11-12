@@ -11,16 +11,22 @@ class SpeedTest():
 
     ''' Run speedtest '''
     def runTest(self):
-        self.results = os.popen("/usr/local/bin/speedtest-cli --simple").read().split()
+        try:
+            self.results = os.popen("/usr/local/bin/speedtest-cli --simple --secure").read().split()
+        except:
+            return
         if 'Cannot' not in self.results:
             self.ping = float(self.results[1])
             self.down = float(self.results[4])
             self.up = float(self.results[7])
 
     ''' Log data in sqlite database '''
-    def logData(self):
-        conn = lite.connect('test.db')
+    def logData(self, path):
+        dir_path = path[:-7]
+        conn = lite.connect(dir_path + 'test.db')
+        os.popen("echo 'connecting' >> ~/Documents/scripts/SpeedTester/debugger.txt")
         with conn:
+            os.popen("echo 'connected!!' >> ~/Documents/scripts/SpeedTester/debugger.txt")
             cursor = conn.cursor()
 
             cursor.execute("CREATE TABLE IF NOT EXISTS Tests(Timestamp TEXT, Ping REAL, Down REAL, Up REAL)")
