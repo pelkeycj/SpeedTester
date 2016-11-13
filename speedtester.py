@@ -22,8 +22,10 @@ def main():
             clearData(path)
         elif arg == "-p":
             plotData(path)
+        elif arg == "-ip":
+            address = setIP(path)
         elif arg == "-m" or arg == "-h" or arg == "-d":
-            setCron(path, arg)
+            setCron(arg)
         else:
             print("Error: enter valid arguments")
             print("-c to clear database")
@@ -39,7 +41,7 @@ def main():
 
 
 ''' Alters the current cron job to desired frequency'''
-def setCron(path, arg):
+def setCron(arg):
     speedtest_ID = "id: SpeedTester"
     cron = CronTab(user=True)
 
@@ -72,6 +74,15 @@ def makeCron(path):
     job.setall('0 * * * *')
     cron.write()
 
+''' Sets the IP address to the current IP '''
+def setIP(path):
+    dir_path = path[:-14]
+    address = requests.requests('GET', 'http://myip.dnsomatic.com').text
+    addr_file = open(dir_path + 'address.obj', 'w')
+    pickle.dump(address, addr_file)
+
+    return address
+
 ''' Gets the IP address for speed monitoring
     Sets the address if not exists'''
 def getIP(path):
@@ -82,9 +93,7 @@ def getIP(path):
         address = pickle.load(addr_file)
     # else create new address file
     except IOError:
-        address = requests.request('GET', 'http://myip.dnsomatic.com').text
-        addr_file = open(dir_path + 'address.obj', 'w')
-        pickle.dump(address, addr_file)
+        address = setIP(path)
 
     return address
 
