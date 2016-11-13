@@ -14,3 +14,6 @@ Arguments include:
 - "-m" to set cron interval to minutely
 - "-h" to set cron interval to hourly
 - "-d" to set cron interval to daily
+
+It is recommended to create an alias in the ~/.bashrc file
+for the SpeedTester program.
