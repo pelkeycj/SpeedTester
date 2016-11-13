@@ -24,8 +24,22 @@ def main():
             plotData(path)
         elif arg == "-ip":
             address = setIP(path)
+        elif arg == "-td":
+            down_target = float(raw_input("Enter download target speed: "))
+            setTargets(path, down=down_target, up=None)
+        elif arg == "-tu":
+            up_target = float(raw_input("Enter upload target speed: "))
+            setTargets(path, down=None, up=up_target)
         elif arg == "-m" or arg == "-h" or arg == "-d":
             setCron(arg)
+        elif arg == "-r":
+            #run test
+            if checkIP(path):
+                print("Testing . . .")
+                test = SpeedTest()
+                test.runTest()
+                test.logData(path)
+                print('Complete')
         else:
             print("Error: enter valid arguments")
             print("-c to clear database")
@@ -33,11 +47,6 @@ def main():
             print("-m to track minutely data")
             print("-h to track hourly data")
             print("-d to track daily data")
-
-    if checkIP(path):
-        test = SpeedTest()
-        test.runTest()
-        test.logData(path)
 
 
 ''' Alters the current cron job to desired frequency'''
@@ -108,6 +117,27 @@ def checkIP(path):
         else:
             return False
 
+''' Set download/upload target speeds '''
+def setTargets(path, down=None, up=None):
+        dir_path = path[:-14]
+
+        if down is not None:
+            down_file = open(dir_path + 'down.obj', 'w')
+            pickle.dump(down, down_file)
+        if up is not None:
+            up_file = open(dir_path + 'up.obj', 'w')
+            pickle.dump(up, up_file)
+
+''' return download/upload target speeds '''
+def getTargets(path):
+    dir_path = path[:-14]
+    down_file = open(dir_path + 'down.obj', 'r')
+    up_file = open(dir_path + 'up.obj', 'r')
+
+    down_target = pickle.load(down_file)
+    up_target = pickle.load(up_file)
+
+    return (down_target, up_target)
 
 ''' Clear all data from database '''
 def clearData(path):
@@ -145,9 +175,16 @@ def plotData(path):
         fig.autofmt_xdate()
 
         plt.plot(dates, downs, 'ro', label="Down Speed")
-        plt.axhline(y=150, color='r', linestyle='-', label='Down Target') # down speed target
         plt.plot(dates, ups, 'bo', label="Up Speed")
-        plt.axhline(y=10, color='b', linestyle='-', label='Up Target') # up speed target
+
+        # attempt to load and graph target lines
+       try:
+            down_target, up_target = getTargets(path)
+            plt.axhline(y=down_target, color='r', linestyle='-', label='Down Target') # down speed target
+            plt.axhline(y=up_target, color='b', linestyle='-', label='Up Target') # up speed target
+        except:
+            print("error")
+            pass
 
         plt.title('Download/Upload Speed')
         plt.xlabel('Date/Time')
