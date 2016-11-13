@@ -23,7 +23,7 @@ def main():
         elif arg == "-p":
             plotData(path)
         elif arg == "-ip":
-            address = setIP(path)
+            setIP(path)
         elif arg == "-td":
             down_target = float(raw_input("Enter download target speed: "))
             setTargets(path, down=down_target, up=None)
@@ -86,7 +86,7 @@ def makeCron(path):
 ''' Sets the IP address to the current IP '''
 def setIP(path):
     dir_path = path[:-14]
-    address = requests.requests('GET', 'http://myip.dnsomatic.com').text
+    address = requests.request('GET', 'http://myip.dnsomatic.com').text
     addr_file = open(dir_path + 'address.obj', 'w')
     pickle.dump(address, addr_file)
 
@@ -178,7 +178,7 @@ def plotData(path):
         plt.plot(dates, ups, 'bo', label="Up Speed")
 
         # attempt to load and graph target lines
-       try:
+        try:
             down_target, up_target = getTargets(path)
             plt.axhline(y=down_target, color='r', linestyle='-', label='Down Target') # down speed target
             plt.axhline(y=up_target, color='b', linestyle='-', label='Up Target') # up speed target
