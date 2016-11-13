@@ -22,7 +22,7 @@ class SpeedTest():
 
     ''' Log data in sqlite database '''
     def logData(self, path):
-        dir_path = path[:-7]
+        dir_path = path[:-14]
         conn = lite.connect(dir_path + 'test.db')
 
         with conn:

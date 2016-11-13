@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import os
+import sys
 import requests
 import pickle
 import matplotlib.dates
@@ -14,10 +15,44 @@ def main():
     path = os.path.abspath(__file__)
     makeCron(path)
 
+    #handle arguments
+    args = sys.argv[1:]
+    for arg in args:
+        if arg == "-c":
+            clearData(path)
+        elif arg == "-p":
+            plotData(path)
+        elif arg == "-m" or arg == "-h" or arg == "-d":
+            setCron(path, arg)
+        else:
+            print("Error: enter valid arguments")
+            print("-c to clear database")
+            print("-p to plot data")
+            print("-m to track minutely data")
+            print("-h to track hourly data")
+            print("-d to track daily data")
+
     if checkIP(path):
         test = SpeedTest()
         test.runTest()
         test.logData(path)
+
+
+''' Alters the current cron job to desired frequency'''
+def setCron(path, arg):
+    speedtest_ID = "id: SpeedTester"
+    cron = CronTab(user=True)
+
+    for job in cron:
+        if job.comment == speedtest_ID:
+            if arg == "-m":
+                job.setall('* * * * *')
+            if arg == "-h":
+                job.setall('0 * * * *')
+            if arg == "-d":
+                job.setall('0 0 * * *')
+            cron.write()
+
 
 ''' Creates a Cron job for the program if needed '''
 def makeCron(path):
@@ -34,7 +69,7 @@ def makeCron(path):
     dir_path = path[:-14]
     job = cron.new(command= "python %s\n" % path)
     job.set_comment(speedtest_ID)
-    job.setall('* 0 * * *')
+    job.setall('0 * * * *')
     cron.write()
 
 ''' Gets the IP address for speed monitoring
@@ -59,10 +94,7 @@ def checkIP(path):
         current_ip = requests.request('GET', 'http://myip.dnsomatic.com').text
         test_ip = getIP(path)
 
-        print(current_ip)
-        print(test_ip)
         if current_ip == test_ip:
-            print("equal addrs")
             return True
         else:
             return False
@@ -105,7 +137,7 @@ def plotData(path):
 
         plt.plot(dates, downs, 'ro', label="Down Speed")
         plt.axhline(y=150, color='r', linestyle='-', label='Down Target') # down speed target
-        plt.plot(dates, ups, 'bo', label="Down Speed")
+        plt.plot(dates, ups, 'bo', label="Up Speed")
         plt.axhline(y=10, color='b', linestyle='-', label='Up Target') # up speed target
 
         plt.title('Download/Upload Speed')
