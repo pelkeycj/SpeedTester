@@ -8,7 +8,10 @@ SpeedTester tests and logs network speeds at set intervals.
 Network speeds are only tested for the desired IP.
 
 Arguments include:
+- "-r" to run a speedtest and log results
 - "-c" to clear database of all entries
+- "-td" to set the target download speed
+- "-tu" to set the target upload speed
 - "-p" to generate a plot of upload/download speeds
 - "-ip" to reset the tracked IP address to the current IP
 - "-m" to set cron interval to minutely
