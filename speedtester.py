@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! /usr/bin/python
 import os
 import sys
 import requests
@@ -30,9 +30,9 @@ def main():
         elif arg == "-tu":
             up_target = float(raw_input("Enter upload target speed: "))
             setTargets(path, down=None, up=up_target)
-        elif arg == "-m" or arg == "-h" or arg == "-d":
+        elif arg == "-min" or arg == "-hour" or arg == "-day" or arg == "-reboot":
             setCron(arg)
-        elif arg == "-r":
+        elif arg == "-run":
             #run test
             if checkIP(path):
                 print("Testing . . .")
@@ -56,12 +56,14 @@ def setCron(arg):
 
     for job in cron:
         if job.comment == speedtest_ID:
-            if arg == "-m":
+            if arg == "-min":
                 job.setall('* * * * *')
-            if arg == "-h":
-                job.setall('0 * * * *')
-            if arg == "-d":
-                job.setall('0 0 * * *')
+            elif arg == "-hour":
+                job.setall('@hourly')
+            elif arg == "-day":
+                job.setall('@daily')
+            elif arg == "-reboot":
+                job.setall('@reboot')
             cron.write()
 
 
