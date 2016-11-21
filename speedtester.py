@@ -80,7 +80,7 @@ def makeCron(path):
 
     #make cron job if not exist
     dir_path = path[:-14]
-    job = cron.new(command= "python %s + -r\n" % path)
+    job = cron.new(command= "python %s + -run\n" % path)
     job.set_comment(speedtest_ID)
     job.setall('0 * * * *')
     cron.write()
