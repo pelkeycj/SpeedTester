@@ -47,6 +47,10 @@ def main():
             print("-m to track minutely data")
             print("-h to track hourly data")
             print("-d to track daily data")
+            print("-ip to set IP address to current")
+            print("-td to enter download target speed")
+            print("-tu to enter upload target speed")
+            print("-run to run test")
 
 
 ''' Alters the current cron job to desired frequency'''
