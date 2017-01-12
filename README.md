@@ -18,5 +18,3 @@ Arguments include:
 - "-hour" to set cron interval to hourly
 - "-day" to set cron interval to daily
 - "-reboot" to set cron interval to every reboot
-
-It is recommended to create an alias in the ~/.bashrc file containing the command and full path to run speedtester.py
